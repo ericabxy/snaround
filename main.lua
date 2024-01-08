@@ -3,8 +3,7 @@ Level = require'level'
 Snack = require'snack'
 Snake = require'snake'
 
-Level.font = love.graphics.newImageFont('charset0.png', '0123456789:;<=>?', 0)
-Level.font = love.graphics.newImageFont('charset80.png', '0123456789:;<=>?', 0)
+Level.font = love.graphics.newImageFont('share/charset0.png', '0123456789:;<=>?', 0)
 
 function setup_game()
   level0 = Level:new()
@@ -24,7 +23,7 @@ end
 
 function love.update(dt)
   timer = timer + dt
-  if timer >= 0.075 then
+  if timer >= 0.15 then
     timer = 0
     snake0:change_direction(Joystick[0])
     local x = snake0:head()
@@ -56,7 +55,7 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.scale(2.5)
   love.graphics.setFont(level0.font)
---  love.graphics.printf(level0.charmap, 0, 0, 320-1, 'left')  
-  love.graphics.printf(level0.charmap, 0, 0, 160-1, 'left')  
+  love.graphics.printf(level0.charmap, 0, 0, 320-1, 'left')  
 end

@@ -3,15 +3,16 @@ Level = require'level'
 Snack = require'snack'
 Snake = require'snake'
 
-Level.font = love.graphics.newImageFont('share/charset0.png', '0123456789:;<=>?', 0)
+Level.font = love.graphics.newImageFont('share/charset0.png', Snake.glyphs, 0)
 
 function setup_game()
-  level0 = Level:new()
+  level0 = Level:new{char_width = 16, char_height = 16}
+  level0:setup(20, 15)
   snack0 = Snack:new()
   snack0:random(level0:free_space())
   level0:insert(snack0.x, '?')
   snake0 = Snake:new()
-  snake0:start(108)
+  snake0:setup(25)
 end
 
 setup_game()
@@ -32,9 +33,9 @@ function love.update(dt)
     elseif snake0.direction == 'left' and not level0:crash_west(x) then
       x = x - 1
     elseif snake0.direction == 'down' and not level0:crash_south(x) then
-      x = x + 20
+      x = x + level0.chars
     elseif snake0.direction == 'up' and not level0:crash_north(x) then
-      x = x - 20
+      x = x - level0.chars
     end
     if not snake0:crash(x) then
       snake0:grow(x)--move head
@@ -57,5 +58,5 @@ end
 function love.draw()
   love.graphics.scale(2.5)
   love.graphics.setFont(level0.font)
-  love.graphics.printf(level0.charmap, 0, 0, 320-1, 'left')  
+  love.graphics.printf(level0:printf( ))
 end

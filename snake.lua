@@ -13,13 +13,18 @@ local forward = {
 }
 
 local snake = {
+  char0 = 48,
   direction = 'right',
+  glyphs = '',
   seg0 = 2,
   seg1 = {},
   seg2 = {},
-  segs = {},
-  start = 175
+  segs = {}
 }
+
+for x=snake.char0,snake.char0+16 do
+  snake.glyphs = snake.glyphs..string.char(x)
+end
 
 function snake:change_direction(direction)
   if direction == 'up' and self.direction ~= 'down' then
@@ -76,7 +81,7 @@ function snake:new(o)
   return o
 end
 
-function snake:start(n)
+function snake:setup(n)
   n = n or 136
   self.segs = {n, n - 1, n - 2}
   self.seg1 = {2, 2, 2}

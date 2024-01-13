@@ -9,8 +9,11 @@ function snack:new(o)
   return o
 end
 
-function snack:random(tab)
+function snack:replace(tab)
   self.x = tab[love.math.random(#tab)]
+  return {
+    {x = self.x, n = 15}
+  }
 end
 
 return snack

@@ -3,23 +3,41 @@ Level = require'level'
 Snack = require'snack'
 Snake = require'snake'
 
-Level.font = love.graphics.newImageFont('share/charset0.png', Snake.glyphs, 0)
+SNACK = 15
 
-function setup_game()
-  level0 = Level:new{char_width = 16, char_height = 16}
-  level0:setup(20, 15)
-  snack0 = Snack:new()
-  snack0:random(level0:free_space())
-  level0:insert(snack0.x, '?')
-  snake0 = Snake:new()
-  snake0:setup(25)
-end
+game_mode = 1
 
-setup_game()
+setup = {
+  function ()
+    timer = 0
+    level0 = Level:new{char_width = 16, char_height = 16}
+    level0.font = love.graphics.newImageFont(
+      'share/charset0.png', Snake.glyphs, 0)
+    level0:setup(20, 15)
+    snack0 = Snack:new()
+    snack0:replace(level0:free_space())
+    level0:insert{{x = snack0.x, n = SNACK}}
+    snake0 = Snake:new()
+    snake0:setup(25)
+  end,
+  function ()
+    timer = 0
+    level0 = Level:new{char_width = 8, char_height = 8}
+    level0.font = love.graphics.newImageFont(
+      'share/charset1.png', Snake.glyphs, 0)
+    level0:setup(40, 30)
+    snack0 = Snack:new()
+    snack0:replace(level0:free_space())
+    level0:insert{{x = snack0.x, n = SNACK}}
+    snake0 = Snake:new()
+    snake0:setup(25)
+  end
+}
+
+setup[game_mode]()
 
 function love.load()
-  setup_game()
-  timer = 0
+  setup[game_mode]()
 end
 
 function love.update(dt)
@@ -38,16 +56,11 @@ function love.update(dt)
       x = x - level0.chars
     end
     if not snake0:crash(x) then
-      snake0:grow(x)--move head
-      level0:insert(snake0:head())
-      level0:insert(snake0:neck())
+      level0:insert(snake0:grow( x ))
       if snake0:head() == snack0.x then
-        snack0:random(level0:free_space())
-        level0:insert(snack0.x, '?')
+        level0:insert(snack0:replace(level0:free_space( )))
       else
-        level0:insert(snake0:tail(), '0')
-        snake0:grown()--move tail
-        level0:insert(snake0:tail( ))
+        level0:insert(snake0:ungrow( ))
       end
     else
       love.load()

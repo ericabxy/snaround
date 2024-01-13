@@ -19,7 +19,8 @@ local snake = {
   seg0 = 2,
   seg1 = {},
   seg2 = {},
-  segs = {}
+  segs = {},
+  segments = {}
 }
 
 for x=snake.char0,snake.char0+16 do
@@ -43,35 +44,30 @@ function snake:change_direction(direction)
 end
 
 function snake:crash(x)
-  for y=1,#self.segs-1 do--exclude tail because it will move
-    if self.segs[y] == x then
+  for y=1,#self.segments-1 do--exclude tail because it will move
+    if self.segments[y].x == x then
       return true
     end
   end
 end
 
 function snake:grow(x)
-  table.insert(self.segs, 1, x)
-  table.insert(self.seg1, 1, reverse[self.seg0])
-  table.insert(self.seg2, 1, 0)--only record the leading edge
-  self.seg2[2] = self.seg2[2] + self.seg0--record the trailing edge
-end
-
-function snake:grown()
-  table.remove(self.segs)
-  local butt = #self.seg1 - 1
-  local tail = #self.seg1
---  self.seg2[butt] = 0--remove the trailing edge
-  table.remove(self.seg1)
-  table.remove(self.seg2)
+  table.insert(self.segments, 1, {
+    x = x,
+    edge0 = reverse[self.seg0],
+    edge1 = 0,
+  })
+  self.segments[1].n = forward[self.segments[1].edge0]
+  self.segments[2].edge1 = self.seg0
+  self.segments[2].n = self.segments[2].edge0 + self.segments[2].edge1
+  return {
+    self.segments[1],
+    self.segments[2]
+  }
 end
 
 function snake:head()
-  return self.segs[1], string.char(48 + forward[self.seg1[1]])
-end
-
-function snake:neck()
-  return self.segs[2], string.char(48 + self.seg1[2] + self.seg2[2])
+  return self.segments[1].x
 end
 
 function snake:new(o)
@@ -86,12 +82,22 @@ function snake:setup(n)
   self.segs = {n, n - 1, n - 2}
   self.seg1 = {2, 2, 2}
   self.seg2 = {2, 2, 2}
+  self.segments = {
+    {x = n, edge0 = 2, edge1 = 0, n = 1},
+    {x = n - 1, edge0 = 2, edge1 = 0, n = 1},
+    {x = n - 2, edge0 = 2, edge1 = 0, n = 1}
+  }
 end
 
-function snake:tail()
-  return
-    self.segs[#self.segs],
-    string.char(48 + self.seg2[#self.seg2])
+function snake:ungrow()
+  local tail = self.segments[#self.segments]
+  table.remove(self.segments)
+  local n = #self.segments
+  self.segments[n].n = self.segments[n].edge1
+  return {
+    self.segments[ n ],
+    {x = tail.x, n = 0}
+  }
 end
 
 return snake

@@ -17,6 +17,7 @@ local default =
 local level = {
   bottom = 208,
   char_height = 8,
+  char_offset = 48,
   char_width = 8,
   charmap = default,
   chars = 28,
@@ -58,20 +59,23 @@ function level:free_space(b)
   return tab
 end
 
-function level:insert(x, char)
-  if x >= string.len(self.charmap) then
-    self.charmap =
-      string.sub(self.charmap, 1, x - 1)..
-      char
-  elseif x <= 1 then
-    self.charmap =
-      char..
-      string.sub(self.charmap, 2)
-  else
-    self.charmap =
-      string.sub(self.charmap, 1, x - 1)..
-      char..
-      string.sub(self.charmap, x + 1)
+function level:insert(arg)
+  for _, tab in ipairs(arg) do
+    local x, char = tab.x, string.char(self.char_offset + tab.n)
+    if x >= string.len(self.charmap) then
+      self.charmap =
+        string.sub(self.charmap, 1, x - 1)..
+        char
+    elseif x <= 1 then
+      self.charmap =
+        char..
+        string.sub(self.charmap, 2)
+    else
+      self.charmap =
+        string.sub(self.charmap, 1, x - 1)..
+        char..
+        string.sub(self.charmap, x + 1)
+    end
   end
 end
 

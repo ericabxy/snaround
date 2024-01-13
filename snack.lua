@@ -1,5 +1,6 @@
 local snack = {
-  x = 1
+  x = 1,
+  n = 15
 }
 
 function snack:new(o)
@@ -11,9 +12,7 @@ end
 
 function snack:replace(tab)
   self.x = tab[love.math.random(#tab)]
-  return {
-    {x = self.x, n = 15}
-  }
+  return {self.x, self.n}
 end
 
 return snack

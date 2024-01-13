@@ -21,8 +21,13 @@ local level = {
   char_width = 8,
   charmap = default,
   chars = 28,
+  glyphs = '',
   print_width = 240
 }
+
+for x=level.char_offset,level.char_offset+16 do
+  level.glyphs = level.glyphs..string.char(x)
+end
 
 function level:crash_east(x)
   if x % self.chars == 0 then

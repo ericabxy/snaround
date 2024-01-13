@@ -13,19 +13,13 @@ local forward = {
 }
 
 local snake = {
-  char0 = 48,
   direction = 'right',
-  glyphs = '',
   seg0 = 2,
   seg1 = {},
   seg2 = {},
   segs = {},
   segments = {}
 }
-
-for x=snake.char0,snake.char0+16 do
-  snake.glyphs = snake.glyphs..string.char(x)
-end
 
 function snake:change_direction(direction)
   if direction == 'up' and self.direction ~= 'down' then

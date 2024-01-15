@@ -14,30 +14,17 @@ local forward = {
 
 local snake = {
   dir = 2,
-  direction = 'right',
-  seg0 = 2,
-  seg1 = {},
-  seg2 = {},
-  segs = {},
   segments = {}
 }
 
-function snake:change_direction(direction)
-  if direction == 'up' and self.direction ~= 'down' then
-    self.direction = 'up'
-    self.seg0 = 1
+function snake:change_direction(joystick)
+  if joystick['up'] and self.dir ~= 4 then
     self.dir = 1
-  elseif direction == 'right' and self.direction ~= 'left' then
-    self.direction = 'right'
-    self.seg0 = 2
+  elseif joystick['right'] and self.dir ~= 8 then
     self.dir = 2
-  elseif direction == 'down' and self.direction ~= 'up' then
-    self.direction = 'down'
-    self.seg0 = 4
+  elseif joystick['down'] and self.dir ~= 1 then
     self.dir = 4
-  elseif direction == 'left' and self.direction ~= 'right' then
-    self.direction = 'left'
-    self.seg0 = 8
+  elseif joystick['left'] and self.dir ~= 2 then
     self.dir = 8
   end
 end
@@ -51,18 +38,19 @@ function snake:crash(x)
 end
 
 function snake:grow(x)
-  table.insert(self.segments, 1, {
-    x = x,
-    edge0 = reverse[self.seg0],
-    edge1 = 0,
-  })
+  table.insert(
+    self.segments,
+    1,
+    {
+      x = x,
+      edge0 = reverse[self.dir],
+      edge1 = 0,
+    }
+  )
   self.segments[1].n = forward[self.segments[1].edge0]
-  self.segments[2].edge1 = self.seg0
+  self.segments[2].edge1 = self.dir
   self.segments[2].n = self.segments[2].edge0 + self.segments[2].edge1
-  return {
-    self.segments[1],
-    self.segments[2]
-  }
+  return {self.segments[1], self.segments[2]}
 end
 
 function snake:head()
@@ -78,9 +66,6 @@ end
 
 function snake:setup(n)
   n = n or 136
-  self.segs = {n, n - 1, n - 2}
-  self.seg1 = {2, 2, 2}
-  self.seg2 = {2, 2, 2}
   self.segments = {
     {x = n, edge0 = 2, edge1 = 0, n = 1},
     {x = n - 1, edge0 = 2, edge1 = 0, n = 1},

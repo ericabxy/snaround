@@ -13,6 +13,7 @@ local forward = {
 }
 
 local snake = {
+  dir = 2,
   direction = 'right',
   seg0 = 2,
   seg1 = {},
@@ -25,15 +26,19 @@ function snake:change_direction(direction)
   if direction == 'up' and self.direction ~= 'down' then
     self.direction = 'up'
     self.seg0 = 1
+    self.dir = 1
   elseif direction == 'right' and self.direction ~= 'left' then
     self.direction = 'right'
     self.seg0 = 2
+    self.dir = 2
   elseif direction == 'down' and self.direction ~= 'up' then
     self.direction = 'down'
     self.seg0 = 4
+    self.dir = 4
   elseif direction == 'left' and self.direction ~= 'right' then
     self.direction = 'left'
     self.seg0 = 8
+    self.dir = 8
   end
 end
 

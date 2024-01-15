@@ -3,7 +3,7 @@ Level = require'level'
 Snack = require'snack'
 Snake = require'snake'
 
-game_mode = 2
+game_mode = 1
 
 setup = {
   function ()
@@ -46,14 +46,8 @@ function love.update(dt)
     snake0.timer = 0
     snake0:change_direction(Joystick[0])
     local x = snake0:head()
-    if snake0.direction == 'right' and not level0:crash_east(x) then
-      x = x + 1
-    elseif snake0.direction == 'left' and not level0:crash_west(x) then
-      x = x - 1
-    elseif snake0.direction == 'down' and not level0:crash_south(x) then
-      x = x + level0.chars
-    elseif snake0.direction == 'up' and not level0:crash_north(x) then
-      x = x - level0.chars
+    if not level0:crash(x, snake0.dir) then
+      x = level0:whereto(x, snake0.dir)
     end
     if not snake0:crash(x) then
       level0:insert(snake0:grow( x ))

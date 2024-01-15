@@ -29,6 +29,18 @@ for x=level.char_offset,level.char_offset+16 do
   level.glyphs = level.glyphs..string.char(x)
 end
 
+function level:crash(x, dir)
+  if dir == 1 and x < self.chars then
+    return true
+  elseif dir == 2 and x % self.chars == 0 then
+    return true
+  elseif dir == 4 and x > self.bottom then
+    return true
+  elseif dir == 8 and x % self.chars == 1 then
+    return true
+  end
+end
+
 function level:crash_east(x)
   if x % self.chars == 0 then
     return true
@@ -102,6 +114,20 @@ function level:setup(chars, lines)
   self.charmap = ''
   for x=1,chars*lines do
     self.charmap = self.charmap..'0'
+  end
+end
+
+function level:whereto(x, dir)
+  if dir == 1 then
+    return x - self.chars
+  elseif dir == 2 then
+    return x + 1
+  elseif dir == 4 then
+    return x + self.chars
+  elseif dir == 8 then
+    return x - 1
+  else
+    return x
   end
 end
 

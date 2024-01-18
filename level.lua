@@ -20,9 +20,14 @@ local level = {
   char_offset = 48,
   char_width = 8,
   charmap = default,
-  chars = 28,
+  chars = 32,
   glyphs = '',
-  print_width = 240
+  lines = 28,
+  print_width = 240,
+  starts = {
+    [0] = 459,
+    [1] = 437
+  }
 }
 
 for x=level.char_offset,level.char_offset+16 do
@@ -115,6 +120,13 @@ function level:setup(chars, lines)
   for x=1,chars*lines do
     self.charmap = self.charmap..'0'
   end
+  self.starts[0] = math.floor(lines / 2) + math.floor(chars / 3)
+  self.starts[1] = math.floor(lines / 2) - math.floor(chars / 3)
+end
+
+function level:pstart(n)
+  n = n % #self.starts
+  return self.starts[n]
 end
 
 function level:whereto(x, dir)
